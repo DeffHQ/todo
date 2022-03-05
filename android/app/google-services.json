@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "50507677951",
+    "project_id": "plswork-357f1",
+    "storage_bucket": "plswork-357f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50507677951:android:bd9064a7d8829da537ccca",
+        "android_client_info": {
+          "package_name": "com.example.todo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "50507677951-bur3322tc8arlqfh6hlurjeh8iqk0jn1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5ya1WKUdhkFqBDN_mT0MyXv9gF0ExwWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "50507677951-bur3322tc8arlqfh6hlurjeh8iqk0jn1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
