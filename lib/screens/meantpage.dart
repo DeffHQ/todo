@@ -17,47 +17,44 @@ class meantpage extends StatefulWidget {
 }
 
 class _meantpageState extends State<meantpage> {
-
   late Future<List<Note>> _noteList;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   final DateFormat _dateFormatter = DateFormat("MMM dd, yyyy");
-  
-  DatabaseHelper _databaseHelper = DatabaseHelper.instance;
 
+  DatabaseHelper _databaseHelper = DatabaseHelper.instance;
 
   @override
   void initState() {
     super.initState();
-    _updateNoteList();
+    updateList();
   }
-
-
-
 
   List tasks = [];
   List isDone = [];
 
-
-  Future<void> updateList()async{
+  Future<void> updateList() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseFirestore reference = FirebaseFirestore.instance;
-    reference.collection('Tasks').doc(auth.currentUser!.email).get().then((value) {
-     tasks =  value.data()!['tasks'];
-     isDone =  value.data()!['isDone'];
-     setState(() {
-     });
+    await reference
+        .collection('Tasks')
+        .doc(auth.currentUser!.email)
+        .get()
+        .then((value) {
+      tasks = value.data()!['tasks'];
+      isDone = value.data()!['isDone'];
+      setState(() {
+      });
     });
   }
 
+  _updateNoteList()async {
+    setState(() {
 
-
-
-
-  _updateNoteList() {
-    _noteList = DatabaseHelper.instance.getNoteList();
+      _noteList = DatabaseHelper.instance.getNoteList();
+    });
   }
 
-  Widget _buildTaskDesign( int index) {
+  Widget _buildTaskDesign(int index) {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 10.0,
@@ -75,20 +72,21 @@ class _meantpageState extends State<meantpage> {
                   : TextDecoration.lineThrough,
             ),
           ),
-
           trailing: Checkbox(
             onChanged: (value) {
-
-
-           setState(() {
-             FirebaseFirestore.instance.collection('Tasks').doc('mr_defunct@yahoo.com').set({'tasks': , 'isDone':newTasksAnswer  });
-
-           });
+              isDone[index] = value;
+              setState(() {
+                FirebaseAuth auth = FirebaseAuth.instance;
+                FirebaseFirestore.instance
+                    .collection('Tasks')
+                    .doc(auth.currentUser!.email)
+                    .set({'tasks': tasks, 'isDone': isDone},
+                    SetOptions(merge: true));
+              });
 
               // TODO:
               // change checkbox value in the list then update your UI and firebase ..
-
-            },  // note.status = value! ? 1 : 0;
+            }, // note.status = value! ? 1 : 0;
             // DatabaseHelper.instance.updateNote(note);
             // _updateNoteList();
             // Navigator.pushReplacement(
@@ -96,8 +94,8 @@ class _meantpageState extends State<meantpage> {
             activeColor: Theme.of(context).primaryColor,
             value: isDone[index],
           ),
-          onTap: ()async {
-           await Navigator.push(
+          onTap: () async {
+            await Navigator.push(
               context,
               CupertinoPageRoute(
                 builder: (_) => AddNoteScreen(
@@ -106,13 +104,10 @@ class _meantpageState extends State<meantpage> {
               ),
             );
 
-           Timer(Duration(seconds: 2), ()async {
-             await updateList();
-
-
-           });
-
-
+            Timer(Duration(seconds: 2), () async {
+              await updateList();
+              print("timer called");
+            });
           },
         ),
       ),
@@ -120,7 +115,7 @@ class _meantpageState extends State<meantpage> {
   }
 
   @override
-  void didChangeDependencies() async{
+  void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
 
     await updateList();
@@ -150,17 +145,13 @@ class _meantpageState extends State<meantpage> {
           color: Colors.white,
         ),
       ),
-      body:
-
-             ListView.builder(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
-              itemCount:tasks.length,
-              itemBuilder: (BuildContext context, int index) {
-
-                return _buildTaskDesign(index);
-              },
-            )
-          ,
+      body:tasks.isEmpty?SizedBox(): ListView.builder(
+        padding: EdgeInsets.symmetric(vertical: 10.0),
+        itemCount: tasks.length,
+        itemBuilder: (BuildContext context, int index) {
+          return _buildTaskDesign(index);
+        },
+      ),
     );
   }
 }

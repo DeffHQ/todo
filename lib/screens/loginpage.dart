@@ -88,6 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                       print(userCredential.user!.uid);
                       userUid = userCredential.user!.uid;
                       userEmail = userCredential.user!.email;
+                      print('You Have Successfully Logged in');
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => meantpage()),);
